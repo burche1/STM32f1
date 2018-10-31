@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>4</fileVersion>
-    <fileChecksum>2334015331</fileChecksum>
+    <fileChecksum>3145862173</fileChecksum>
     <configuration>
         <name>Debug</name>
         <outputs>
@@ -66,6 +66,7 @@
             <file>$PROJ_DIR$\Debug\Obj\USART.pbd</file>
             <file>$PROJ_DIR$\main.c</file>
             <file>$PROJ_DIR$\Debug\Exe\USART.bin</file>
+            <file>$PROJ_DIR$\..\CMSIS\platform_config.h</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\std_periph\stm32f10x_gpio.c</name>
@@ -316,7 +317,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 19 47 41 35 37 46 45 34 52 15 42 39 49 48 44 36 54 53</file>
+                    <file> 47 35 15 44 46 45 42 39 49 48 34 36 41 52 19 37 54 53</file>
                 </tool>
             </inputs>
         </file>

@@ -107,7 +107,16 @@ void usart_init(void)
 }
 
 void USARTSend(char *pucBuffer)
-{  
+{
+  /*
+  while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == 0)
+  {
+    while(USART_GetFlagStatus(USART1, USART_FLAG_IDLE) == 1){};
+    USART_SendData(USART1, *pucBuffer);
+    pucBuffer++;
+  }
+  */
+  
     while(*pucBuffer != 0){
         USART_SendData(USART1, *pucBuffer);
         while(USART_GetFlagStatus(USART1, USART_FLAG_TC) != RESET){}

@@ -2072,6 +2072,9 @@
             <name>$PROJ_DIR$\..\CMSIS\core_cm3.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\CMSIS\platform_config.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\CMSIS\startup_stm32f10x_cl.s</name>
         </file>
         <file>
