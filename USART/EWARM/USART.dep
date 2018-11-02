@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>4</fileVersion>
-    <fileChecksum>3145862173</fileChecksum>
+    <fileChecksum>969851114</fileChecksum>
     <configuration>
         <name>Debug</name>
         <outputs>
@@ -57,9 +57,6 @@
             <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
             <file>$PROJ_DIR$\Debug\Obj\startup_stm32f10x_cl.o</file>
             <file>$PROJ_DIR$\Debug\Obj\system_stm32f10x.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
             <file>$PROJ_DIR$\Debug\Obj\main.o</file>
             <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
             <file>$PROJ_DIR$\Debug\Exe\USART.out</file>
@@ -208,7 +205,7 @@
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 57 33</file>
+                    <file> 54 33</file>
                 </tool>
             </outputs>
         </file>
@@ -235,7 +232,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 47 15 41 42 39 45 19 37 46 49 48 44 34 35 36</file>
+                    <file> 44 46 35 19 37 49 48 34 36 47 15 42 39 45 41</file>
                 </tool>
             </inputs>
         </file>
@@ -284,13 +281,13 @@
                 </tool>
                 <tool>
                     <name>OBJCOPY</name>
-                    <file> 60</file>
+                    <file> 57</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 28 43 55 7 50 5 6 14 13 51 29 30 31 32</file>
+                    <file> 28 43 52 7 50 5 6 14 13 51 29 30 31 32</file>
                 </tool>
             </inputs>
         </file>
@@ -299,7 +296,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 55</file>
+                    <file> 52</file>
                 </tool>
                 <tool>
                     <name>__cstat</name>
@@ -307,17 +304,17 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 56</file>
+                    <file> 53</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 47 15 42 39 46 49 48 44 19 37 34 45 35 41 36 52 54 53</file>
+                    <file> 47 15 42 39 46 49 48 44 19 37 34 45 35 41 36</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 47 35 15 44 46 45 42 39 49 48 34 36 41 52 19 37 54 53</file>
+                    <file> 36 19 35 37 49 48 34 47 45 46 44 41 15 42 39</file>
                 </tool>
             </inputs>
         </file>

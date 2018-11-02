@@ -83,7 +83,7 @@ void usart_init(void)
 		- USART LastBit: The clock pulse of the last data bit is not output to
 			the SCLK pin
 	 */
-	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_BaudRate = 9600;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -107,16 +107,7 @@ void usart_init(void)
 }
 
 void USARTSend(char *pucBuffer)
-{
-  /*
-  while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == 0)
-  {
-    while(USART_GetFlagStatus(USART1, USART_FLAG_IDLE) == 1){};
-    USART_SendData(USART1, *pucBuffer);
-    pucBuffer++;
-  }
-  */
-  
+{  
     while(*pucBuffer != 0){
         USART_SendData(USART1, *pucBuffer);
         while(USART_GetFlagStatus(USART1, USART_FLAG_TC) != RESET){}
@@ -154,7 +145,7 @@ void USART2_IRQHandler(void)
     		RX_BUF[RXi] = RXc;
     		RXi++;
 
-    		if (RXi != 13) {
+    		if (RXc != 13) {
     			if (RXi > RX_BUF_SIZE-1) {
     				clear_RXBuffer();
     			}
@@ -172,10 +163,10 @@ int main(void)
 {
     // Initialize USART
     usart_init();
-    USARTSend(" Hello.\r\nUSART1 is ready.\n");
+    USARTSend(" Hello.\nUSART1 is ready.\n");
     
     while (1){
-        USARTSend("012");
+        USARTSend("teste");
         USARTSend("\n");
     }
     
