@@ -3,7 +3,8 @@ Embedded_Learning
 
 Directory used to compile several projects about programming in STM21F10X micro processors.
 
-Objectives:
+Goals:
+
 - GPIO -> OK
 - TIM Interrupt -> OK
 - EXT Iterrupt -> OK
