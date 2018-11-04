@@ -37,14 +37,14 @@ void usart_init(void)
 
 	/* NVIC Configuration USART1 */
 	NVIC_InitTypeDef NVIC_InitStructure;
-	/* Enable the USARTx Interrupt */
+	/* Enable the USART1 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
         
-	/* Enable the USARTx Interrupt */
+	/* Enable the USART2 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -126,6 +126,8 @@ void USART1_IRQHandler(void)
 {
     if ((USART1->SR & USART_FLAG_RXNE) != (u16)RESET)
 	{
+                char *str1 = "1\r\n";
+                int i = 0;
     		RXc = USART_ReceiveData(USART1);
     		RX_BUF[RXi] = RXc;
     		RXi++;
@@ -139,8 +141,9 @@ void USART1_IRQHandler(void)
     			RX_FLAG_END_LINE = 1;
     		}
 
-			//Echo
-    		//USART_SendData(USART1, RXc);
+		//Echo
+    		//for (i = 0; i < strlen(str1); i++)
+                    //USARTSend(USART1, str1[i]);
 	}
 }
 
@@ -148,6 +151,8 @@ void USART2_IRQHandler(void)
 {
     if ((USART2->SR & USART_FLAG_RXNE) != (u16)RESET)
 	{
+                char *str2 = "2\r\n";
+                int i = 0;
     		RXc = USART_ReceiveData(USART2);
     		RX_BUF[RXi] = RXc;
     		RXi++;
@@ -162,7 +167,8 @@ void USART2_IRQHandler(void)
     		}
 
 			//Echo
-    		//USART_SendData(USART2, RXc);
+    		//for (i = 0; i < strlen(str2); i++)
+                    //USARTSend(USART2, str2[i]);
 	}
 }
 
@@ -177,6 +183,9 @@ int main(void)
         volatile int i;
         for (i = 0; i < strlen(stringToSend); i++)
             USARTSend(USART1, stringToSend[i]);
+        Delay(7200000);
+        for (i = 0; i < strlen(stringToSend); i++)
+            USARTSend(USART2, stringToSend[i]);
         Delay(7200000);
     }
 }
