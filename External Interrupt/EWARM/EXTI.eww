@@ -9,5 +9,8 @@
     <project>
         <path>$WS_DIR$\..\..\USART\EWARM\USART.ewp</path>
     </project>
+    <project>
+        <path>$WS_DIR$\..\..\USART synchronous\EWARM\USART synchronous.ewp</path>
+    </project>
     <batchBuild />
 </workspace>
