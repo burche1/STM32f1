@@ -14,7 +14,7 @@ Goals:
 - UART interrupt -> OK (need to better understand)
 - USART -> on hold
 - DHT11 (data is a serial output) 
-- I2C
+- I2C -> ongoing
 - SPI -> ongoing
 
 Projects are created on IAR Embedded Workbench 8.30.1
