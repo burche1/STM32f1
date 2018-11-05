@@ -55,7 +55,7 @@
 #include "misc.h"
 #include "stm32f10x_usart.h" 
 #include "stm32f10x_adc.h"
-#include "stm32f10x_spi.h"
+#include "stm32f10x_i2c.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
