@@ -12,10 +12,10 @@ Goals:
 - ADC Button -> OK (With potentiometer)
 - UART polling -> OK
 - UART interrupt -> OK (need to better understand)
-- USART -> ongoing
+- USART -> on hold
 - DHT11 (data is a serial output) 
 - I2C
-- SPI
+- SPI -> ongoing
 
 Projects are created on IAR Embedded Workbench 8.30.1
 
