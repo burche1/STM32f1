@@ -4,6 +4,9 @@
         <path>$WS_DIR$\EXTI.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\..\..\SPI\EWARM\SPI.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\..\..\Temperature_Sensor\EWARM\temperature.ewp</path>
     </project>
     <project>
