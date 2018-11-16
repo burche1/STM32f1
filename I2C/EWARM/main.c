@@ -5,7 +5,7 @@
 #include "stm32f10x_usart.h"
 #include "misc.h"
 #include "string.h"
-#include "stm32f10x_i2c.h
+#include "stm32f10x_i2c.h"
 #include "stdio.h"
 
 
