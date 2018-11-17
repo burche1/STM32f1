@@ -1,4 +1,4 @@
-/* Includes ------------------------------------------------------------------*/
+/* Includes -------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_rcc.h"
@@ -9,9 +9,14 @@
 #include "stdio.h"
 
 
-/*******************************************************************/
-// I2C
-/*******************************************************************/
+/* Variables ------------------------------------------------------------------*/
+uint8_t SlaveAddress = 1010000;
+uint8_t Read = 1;
+uint8_t Write = 0;
+uint8_t Data = 01101001;        // i
+
+
+/* Functions ------------------------------------------------------------------*/
 
 void I2C1_init(void)
 {
@@ -41,8 +46,72 @@ void I2C1_init(void)
     I2C_Init(I2C1, &I2C_InitStructure);
 }
 
+/*
+  * @brief  Configures the specified I2C own address2.
+  * @param  I2Cx: where x can be 1 or 2 to select the I2C peripheral.
+  * @param  Address: specifies the 7bit I2C own address2.
+  * @retval None.
+I2C_OwnAddress2Config(I2C_TypeDef* I2Cx, uint8_t Address)
+*/
+
+
+/*
+  * @brief  Sends a data byte through the I2Cx peripheral.
+  * @param  I2Cx: where x can be 1 or 2 to select the I2C peripheral.
+  * @param  Data: Byte to be transmitted..
+  * @retval None
+I2C_SendData(I2C_TypeDef* I2Cx, uint8_t Data)
+*/
+
+
+/*
+  * @brief  Returns the most recent received data by the I2Cx peripheral.
+  * @param  I2Cx: where x can be 1 or 2 to select the I2C peripheral.
+  * @retval The value of the received data.
+I2C_ReceiveData(I2C_TypeDef* I2Cx)
+*/
+
+
+/*
+  * @brief  Transmits the address byte to select the slave device.
+  * @param  I2Cx: where x can be 1 or 2 to select the I2C peripheral.
+  * @param  Address: specifies the slave address which will be transmitted
+  * @param  I2C_Direction: specifies whether the I2C device will be a
+  *   Transmitter or a Receiver. This parameter can be one of the following values
+  *     @arg I2C_Direction_Transmitter: Transmitter mode
+  *     @arg I2C_Direction_Receiver: Receiver mode
+  * @retval None.
+I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Direction)
+*/
+
 
 int main()
 {
+  I2C1_init();
+  /* Start Condition */
+  I2C_GenerateSTART(I2C1, ENABLE);
+  
+  /* Slave Address Transmitter */
+  //I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Transmitter);
+  
+  /* Slave Address Receiver */
+  //I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Receiver);
+  
+  /* Read or Write */
+  //I2C_SendData(I2C1, Read);
+  //I2C_SendData(I2C1, Write);
+  
+  /* Ack */
+  //Ack
+  
+  /* Data */
+  //I2C_SendData(I2C1, Data);
+  
+  /* Ack */
+  //Ack
+  
+  /* Stop Condition */ 
+  I2C_GenerateSTOP(I2C1, ENABLE);
+  
   while(1);
 }
