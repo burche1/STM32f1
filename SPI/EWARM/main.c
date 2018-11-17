@@ -7,46 +7,15 @@
 #include "string.h"
 #include "stm32f10x_spi.h"
 
-/**
-  ******************************************************************************
-  * @file    SPI/Simplex_Interrupt/main.c 
-  * @author  MCD Application Team
-  * @version V3.5.0
-  * @date    08-April-2011
-  * @brief   Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************
-  */ 
-
-/* Includes ------------------------------------------------------------------*/
-#include "stm32f10x.h"
-#include "platform_config.h"
-
-/** @addtogroup STM32F10x_StdPeriph_Examples
-  * @{
-  */
-
-/** @addtogroup SPI_Simplex_Interrupt
-  * @{
-  */ 
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 
+
 /* Private define ------------------------------------------------------------*/
 #define BufferSize 32
 
-/* Private macro -------------------------------------------------------------*/
+
 /* Private variables ---------------------------------------------------------*/
 SPI_InitTypeDef SPI_InitStructure;
 uint8_t SPI_MASTER_Buffer_Tx[BufferSize] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -59,26 +28,17 @@ uint8_t SPI_SLAVE_Buffer_Rx[BufferSize];
 __IO uint8_t TxIdx = 0, RxIdx = 0;
 volatile TestStatus TransferStatus = FAILED;
 
+
 /* Private functions ---------------------------------------------------------*/
 void RCC_Configuration(void);
 void GPIO_Configuration(void);
 void NVIC_Configuration(void);
 TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
+
+
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f10x_xx.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f10x.c file
-     */     
-       
   /* System clocks configuration ---------------------------------------------*/
   RCC_Configuration();
 
@@ -130,6 +90,7 @@ int main(void)
   {}
 }
 
+
 /**
   * @brief  Configures the different system clocks.
   * @param  None
@@ -156,6 +117,7 @@ void RCC_Configuration(void)
   /* Enable SPI_SLAVE Periph clock */
   RCC_APB1PeriphClockCmd(SPI_SLAVE_CLK, ENABLE);
 }
+
 
 /**
   * @brief  Configures the different GPIO ports.
@@ -189,6 +151,7 @@ void GPIO_Configuration(void)
   GPIO_Init(SPI_SLAVE_GPIO, &GPIO_InitStructure);
 }
 
+
 /**
   * @brief  Configure the nested vectored interrupt controller.
   * @param  None
@@ -215,6 +178,7 @@ void NVIC_Configuration(void)
   NVIC_Init(&NVIC_InitStructure);
 }
 
+
 /**
   * @brief  Compares two buffers.
   * @param  pBuffer1, pBuffer2: buffers to be compared.
@@ -237,34 +201,3 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 
   return PASSED;
 }
-
-#ifdef  USE_FULL_ASSERT
-
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {}
-}
-
-#endif
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
-
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
