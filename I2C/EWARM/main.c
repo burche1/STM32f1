@@ -10,10 +10,12 @@
 
 
 /* Variables ------------------------------------------------------------------*/
-uint8_t SlaveAddress = 1010000;
+uint8_t SlaveAddress = 1010000; //E0, E1, E2 to ground
 uint8_t Read = 1;
 uint8_t Write = 0;
 uint8_t Data = 01101001;        // i
+uint8_t TempRead = 00000000;
+uint8_t ReadValue;
 
 
 /* Functions ------------------------------------------------------------------*/
@@ -44,6 +46,63 @@ void I2C1_init(void)
     I2C_Cmd(I2C1, ENABLE);
     /* Apply I2C configuration after enabling it */
     I2C_Init(I2C1, &I2C_InitStructure);
+}
+
+void I2C_Write(uint8_t DataToSend)
+{
+  /* Start Condition */
+  I2C_GenerateSTART(I2C1, ENABLE);
+  /* Slave Address Transmitter */
+  I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Transmitter);
+  /* Read or Write */
+  I2C_SendData(I2C1, Write);
+  /* Ack */
+  if (I2C_ReceiveData(I2C1) == 1)
+  {
+    /* Data */
+    I2C_SendData(I2C1, DataToSend);
+    TempRead = 10000000;        //código de sucesso da escrita
+  }
+  else
+    TempRead = 00001111;        //código de erro Address e R/W
+  
+  if (I2C_ReceiveData(I2C1) == 1)
+  {
+    /* Stop Condition */ 
+    I2C_GenerateSTOP(I2C1, ENABLE);
+  }
+  else
+    TempRead = 00001110;        //código de erro Send Data
+}
+
+int I2C_Read()
+{
+  /* Start Condition */
+  I2C_GenerateSTART(I2C1, ENABLE);
+  /* Slave Address Receiver */
+  I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Receiver);
+  /* Read or Write */
+  I2C_SendData(I2C1, Read);
+  
+  /* Ack Test */
+  if (I2C_ReceiveData(I2C1) == 1)
+  {
+    /* Data */
+    TempRead = I2C_ReceiveData(I2C1);      //sucesso da leitura TempRead = 01101001
+  }
+  else
+    TempRead = 10001111;        //código de erro Address e R/W
+  
+  /* Ack Test */
+  if (I2C_ReceiveData(I2C1) == 1)
+  {
+    /* Stop Condition */ 
+    I2C_GenerateSTOP(I2C1, ENABLE);
+  }
+  else
+    TempRead = 10001110;        //código de erro Send Data
+  
+  return TempRead;
 }
 
 /*
@@ -89,7 +148,7 @@ int main()
 {
   I2C1_init();
   /* Start Condition */
-  I2C_GenerateSTART(I2C1, ENABLE);
+  //I2C_GenerateSTART(I2C1, ENABLE);
   
   /* Slave Address Transmitter */
   //I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Transmitter);
@@ -111,7 +170,11 @@ int main()
   //Ack
   
   /* Stop Condition */ 
-  I2C_GenerateSTOP(I2C1, ENABLE);
+  //I2C_GenerateSTOP(I2C1, ENABLE);
   
-  while(1);
+  while(1)
+  {
+    I2C_Write(Data);
+    ReadValue = I2C_Read();
+  }
 }
