@@ -8,14 +8,27 @@
 #include "stm32f10x_i2c.h"
 #include "stdio.h"
 
+/* Macro ----------------------------------------------------------------------*/
+#define B(x) S_to_binary_(#x)
+
+static inline unsigned long long S_to_binary_(const char *s)
+{
+    unsigned long long i = 0;
+    while (*s) {
+        i <<= 1;
+        i += *s++ - '0';
+    }
+    return i;
+}
+
 
 /* Variables ------------------------------------------------------------------*/
-uint8_t SlaveAddress = 1010000; //E0, E1, E2 to ground
-uint8_t Read = 1;
-uint8_t Write = 0;
-uint8_t Data = 01101001;        // i
-uint8_t TempRead = 00000000;
+uint8_t SlaveAddress; //E0, E1, E2 to ground
+uint8_t Read;
+uint8_t Write;
+uint8_t TempRead;
 uint8_t ReadValue;
+uint8_t Data;
 
 
 /* Functions ------------------------------------------------------------------*/
@@ -50,6 +63,8 @@ void I2C1_init(void)
 
 void I2C_Write(uint8_t DataToSend)
 {
+  SlaveAddress = B(1010000);
+  Write = B(0);
   /* Start Condition */
   I2C_GenerateSTART(I2C1, ENABLE);
   /* Slave Address Transmitter */
@@ -57,26 +72,28 @@ void I2C_Write(uint8_t DataToSend)
   /* Read or Write */
   I2C_SendData(I2C1, Write);
   /* Ack */
-  if (I2C_ReceiveData(I2C1) == 1)
+  if (I2C_ReceiveData(I2C1) == B(0))
   {
     /* Data */
     I2C_SendData(I2C1, DataToSend);
-    TempRead = 10000000;        //código de sucesso da escrita
+    TempRead = B(10000000);        //código de sucesso da escrita
   }
   else
-    TempRead = 00001111;        //código de erro Address e R/W
+    TempRead = B(00001111);        //código de erro Address e R/W
   
-  if (I2C_ReceiveData(I2C1) == 1)
+  if (I2C_ReceiveData(I2C1) == B(1))
   {
     /* Stop Condition */ 
     I2C_GenerateSTOP(I2C1, ENABLE);
   }
   else
-    TempRead = 00001110;        //código de erro Send Data
+    TempRead = B(00001110);        //código de erro Send Data
 }
 
 int I2C_Read()
 {
+  SlaveAddress = B(1010000);
+  Read = B(1);
   /* Start Condition */
   I2C_GenerateSTART(I2C1, ENABLE);
   /* Slave Address Receiver */
@@ -85,22 +102,22 @@ int I2C_Read()
   I2C_SendData(I2C1, Read);
   
   /* Ack Test */
-  if (I2C_ReceiveData(I2C1) == 1)
+  if (I2C_ReceiveData(I2C1) == B(1))
   {
     /* Data */
     TempRead = I2C_ReceiveData(I2C1);      //sucesso da leitura TempRead = 01101001
   }
   else
-    TempRead = 10001111;        //código de erro Address e R/W
+    TempRead = B(10001111);        //código de erro Address e R/W
   
   /* Ack Test */
-  if (I2C_ReceiveData(I2C1) == 1)
+  if (I2C_ReceiveData(I2C1) == B(1))
   {
     /* Stop Condition */ 
     I2C_GenerateSTOP(I2C1, ENABLE);
   }
   else
-    TempRead = 10001110;        //código de erro Send Data
+    TempRead = B(10001110);        //código de erro Send Data
   
   return TempRead;
 }
@@ -147,6 +164,8 @@ I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Direction)
 int main()
 {
   I2C1_init();
+  uint8_t Data = B(01101001);        // i
+  TempRead = B(00000000);
   /* Start Condition */
   //I2C_GenerateSTART(I2C1, ENABLE);
   
