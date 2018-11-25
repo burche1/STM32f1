@@ -334,6 +334,10 @@
             <name>$PROJ_DIR$\main.c</name>
             <outputs>
                 <tool>
+                    <name>ICCARM</name>
+                    <file> 58</file>
+                </tool>
+                <tool>
                     <name>__cstat</name>
                     <file> 46</file>
                 </tool>
@@ -349,7 +353,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 67 10 9 61 13 37 32 12 31 16 15 8 17 14 35 69 71 66 64 11</file>
+                    <file> 61 71 66 9 69 67 10 13 35 64 12 31 16 15 8 17 14 37 32 11</file>
                 </tool>
             </inputs>
         </file>

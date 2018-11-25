@@ -26,13 +26,16 @@ static inline unsigned long long S_to_binary_(const char *s)
 /* Defines --------------------------------------------------------------------*/
 #define TIMEOUT                 ((uint32_t)0x1000)
 #define LONG_TIMEOUT            ((uint32_t)(10 * TIMEOUT))
+#define WriteAddress            0x50
+#define ReadAddress             0x50
 
 
 /* Variables ------------------------------------------------------------------*/
-uint8_t SlaveAddress; //E0, E1, E2 to ground
-uint8_t TempRead;
+uint8_t SlaveAddress; //E0, E1, E2 to ground -> SlaveAddress = B(1010000);
+uint8_t TempData;
 uint8_t ReadValue;
 __IO uint32_t  timeout = LONG_TIMEOUT;
+uint8_t Data = 0x69;
 
 
 /* Functions ------------------------------------------------------------------*/
@@ -71,11 +74,9 @@ void I2C1_init(void)
 }
 
 
-uint32_t I2C_Write(uint8_t* DataToSend, uint16_t WriteAddr, uint8_t NumByteToWrite)
+uint32_t I2C_Write(uint8_t DataToSend, uint16_t WriteAddr)
 {
-  /*!< Address of EEPROM */
   SlaveAddress = B(1010000);
-  
   /*!< While the bus is busy */
   timeout = LONG_TIMEOUT;
   while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
@@ -93,7 +94,6 @@ uint32_t I2C_Write(uint8_t* DataToSend, uint16_t WriteAddr, uint8_t NumByteToWri
     if((timeout--) == 0) return CallBack();
   }
   
-  timeout = TIMEOUT;
   /* Slave Address Transmitter */
   I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Transmitter);
   
@@ -112,7 +112,7 @@ uint32_t I2C_Write(uint8_t* DataToSend, uint16_t WriteAddr, uint8_t NumByteToWri
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
   {
     if((timeout--) == 0) return CallBack();
-  }  
+  }
   
   /*!< Send Data to be written */
   I2C_SendData(I2C1, DataToSend);
@@ -129,47 +129,111 @@ uint32_t I2C_Write(uint8_t* DataToSend, uint16_t WriteAddr, uint8_t NumByteToWri
 }
 
 
-int I2C_Read()
+int I2C_Read(uint8_t DataReceived, uint16_t ReadAddr)
 {
-  SlaveAddress = B(1010000);
+  /*!< While the bus is busy */
+  timeout = LONG_TIMEOUT;
+  while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
+  {
+    if((timeout--)==0) return CallBack();
+  }
+  
   /* Start Condition */
   I2C_GenerateSTART(I2C1, ENABLE);
+  
+  /*!< Test on EV5 and clear it */
+  timeout = TIMEOUT;
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+  {
+    if((timeout--) == 0) return CallBack();
+  }
+  
+  /* Slave Address Transmitter */
+  I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Transmitter);
+  
+  /*!< Test on EV6 and clear it */
+  timeout = TIMEOUT;
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+  {
+    if((timeout--) == 0) return CallBack();
+  }
+  
+  /*!< Send the EEPROM's internal address to read from : only one byte Address */
+  I2C_SendData(I2C1, ReadAddr);
+  
+  /*!< Test on EV8 and clear it */
+  timeout = TIMEOUT;  
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+  {
+    if((timeout--) == 0) return CallBack();
+  }
+  
+  /* Start Condition Again */
+  I2C_GenerateSTART(I2C1, ENABLE);
+  
+  /*!< Test on EV5 and clear it Again */
+  timeout = TIMEOUT;
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+  {
+    if((timeout--) == 0) return CallBack();
+  }
+  
   /* Slave Address Receiver */
   I2C_Send7bitAddress(I2C1, SlaveAddress, I2C_Direction_Receiver);
   
-  /* Ack Test */
-  if (I2C_ReceiveData(I2C1) == B(1))
+  /* Wait on ADDR flag to be set */
+  timeout = TIMEOUT;
+  while(I2C_GetFlagStatus(I2C1, I2C_FLAG_ADDR) == RESET)
   {
-    /* Data */
-    TempRead = I2C_ReceiveData(I2C1);      //sucesso da leitura TempRead = 01101001
+    if((timeout--) == 0) return CallBack();
   }
-  else
-    TempRead = B(10001111);        //código de erro Address e R/W
   
-  /* Ack Test */
-  if (I2C_ReceiveData(I2C1) == B(1))
+  /*!< Disable Acknowledgement */
+  I2C_AcknowledgeConfig(I2C1, DISABLE);
+  
+  /* disable interrupts */
+  //__disable_irq();
+  
+  /* Clear ADDR register by reading SR1 then SR2 register (SR1 has already been read) */
+  (void)I2C1->SR2;
+  
+  /* Stop Condition */
+  I2C_GenerateSTOP(I2C1, ENABLE);
+  
+  /* enable interrupts */
+  //__enable_irq();
+  
+  /* Wait for the byte to be received */
+  timeout = TIMEOUT;
+  while(I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET)
   {
-    /* Stop Condition */ 
-    I2C_GenerateSTOP(I2C1, ENABLE);
+    if((timeout--) == 0) return CallBack();
   }
-  else
-    TempRead = B(10001110);        //código de erro Send Data
   
-  return TempRead;
+  /*!< Read the byte received from the EEPROM */
+  DataReceived = I2C_ReceiveData(I2C1);
+  
+  /* Wait to make sure that STOP control bit has been cleared */
+  timeout = TIMEOUT;
+  while(I2C1->CR1 & I2C_CR1_STOP)
+  {
+    if((timeout--) == 0) return CallBack();
+  }
+  
+  /*!< Re-Enable Acknowledgement to be ready for another reception */
+  I2C_AcknowledgeConfig(I2C1, ENABLE);
+  
+  return DataReceived;
 }
 
 
 int main()
 {
   I2C1_init();
-  uint8_t Data[] = 01101001;        // i
-  TempRead = B(00000000);
-  uint8_t WriteAddr = B(00000000);
-  uint8_t NumByteToWrite = 1;
   
   while(1)
   {
-    I2C_Write(Data, WriteAddr, NumByteToWrite);
-    ReadValue = I2C_Read();
+    I2C_Write(Data, WriteAddress);
+    ReadValue = I2C_Read(TempData ,ReadAddress);
   }
 }
