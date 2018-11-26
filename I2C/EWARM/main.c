@@ -31,7 +31,7 @@ static inline unsigned long long S_to_binary_(const char *s)
 
 
 /* Variables ------------------------------------------------------------------*/
-uint8_t SlaveAddress; //E0, E1, E2 to ground -> SlaveAddress = B(1010000);
+uint8_t SlaveAddress = 0x50; //E0, E1, E2 to ground -> SlaveAddress = B(1010000);
 uint8_t TempData;
 uint8_t ReadValue;
 __IO uint32_t  timeout = LONG_TIMEOUT;
@@ -76,7 +76,6 @@ void I2C1_init(void)
 
 uint32_t I2C_Write(uint8_t DataToSend, uint16_t WriteAddr)
 {
-  SlaveAddress = B(1010000);
   /*!< While the bus is busy */
   timeout = LONG_TIMEOUT;
   while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
