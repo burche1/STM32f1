@@ -229,6 +229,7 @@ int I2C_Read(uint8_t DataReceived, uint16_t ReadAddr)
 
 int main()
 {
+  I2C_DeInit(I2C1);
   I2C1_init();
   
   while(1)
